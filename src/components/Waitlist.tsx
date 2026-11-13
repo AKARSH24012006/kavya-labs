@@ -4,12 +4,30 @@ import { useState } from "react";
 
 export default function Waitlist() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "error" | "done">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "error" | "done">("idle");
+  const [message, setMessage] = useState("Please enter a valid email address.");
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-    setStatus(ok ? "done" : "error");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setMessage("Please enter a valid email address.");
+      setStatus("error");
+      return;
+    }
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "We couldn't save that right now. Please try again.");
+      setStatus("done");
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setStatus("error");
+    }
   }
 
   return (
@@ -46,14 +64,19 @@ export default function Waitlist() {
                 aria-describedby={status === "error" ? "email-error" : undefined}
                 className="flex-1 rounded-full border-2 border-ink/10 bg-paper px-5 py-3.5 text-ink outline-none placeholder:text-muted focus:border-ink"
               />
-              <button type="submit" className="rounded-full bg-ink px-6 py-3.5 font-semibold text-paper transition hover:bg-ink-2">
-                Request access
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                aria-busy={status === "loading"}
+                className="rounded-full bg-ink px-6 py-3.5 font-semibold text-paper transition hover:bg-ink-2 disabled:cursor-wait disabled:opacity-70"
+              >
+                {status === "loading" ? "Saving…" : "Request access"}
               </button>
             </form>
           )}
           {status === "error" && (
             <p id="email-error" className="mt-3 text-sm font-medium text-ink">
-              Please enter a valid email address.
+              {message}
             </p>
           )}
         </div>
