@@ -2,7 +2,8 @@
 import { readFile } from "node:fs/promises";
 import pg from "pg";
 
-const url = process.env.DATABASE_URL;
+// DATABASE_URL, or the names the Vercel × Neon integration creates
+const url = process.env.DATABASE_URL || process.env.DATABASE_POSTGRES_URL || process.env.POSTGRES_URL;
 if (!url) {
   console.warn("[migrate] DATABASE_URL not set, skipping migrations");
   process.exit(0);

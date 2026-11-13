@@ -76,4 +76,4 @@ The 46 checks cover the waitlist (validation, saving, duplicates), redirects for
 
 ## Deploy
 
-Import the repo into Vercel and set `DATABASE_URL`, `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` and `ADMIN_EMAILS`. The build runs the migration first, so the schema is always current.
+Import the repo into Vercel and set `DATABASE_URL` (or connect Neon from the Storage tab, whose `DATABASE_POSTGRES_URL` also works), `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` and `ADMIN_EMAILS`. The build runs the migration first, so the schema is always current.

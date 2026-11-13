@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import PostgresAdapter from "@auth/pg-adapter";
-import { pool, query } from "@/lib/db";
+import { databaseUrl, pool, query } from "@/lib/db";
 import type { Role } from "@/types/next-auth";
 
 /** Comma-separated list of emails that are made admins on first sign-in. */
@@ -17,7 +17,7 @@ const adminEmails = (process.env.ADMIN_EMAILS ?? "")
  */
 const secret =
   process.env.AUTH_SECRET ??
-  (process.env.DATABASE_URL ? createHash("sha256").update("kavya-auth:" + process.env.DATABASE_URL).digest("base64") : undefined);
+  (databaseUrl ? createHash("sha256").update("kavya-auth:" + databaseUrl).digest("base64") : undefined);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret,
