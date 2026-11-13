@@ -3,7 +3,7 @@ import Logo from "./Logo";
 const cols = [
   { title: "Product", links: [["Features", "#features"], ["How it works", "#how"], ["Pricing", "#pricing"], ["FAQ", "#faq"]] },
   { title: "Company", links: [["About", "#"], ["Careers", "#"], ["Press kit", "#"], ["Contact", "mailto:hello@kavyalabs.in"]] },
-  { title: "Legal", links: [["Privacy", "#"], ["Terms", "#"], ["Security", "#"]] },
+  { title: "Legal", links: [["Privacy", "/privacy"], ["Terms", "/terms"], ["Security", "#"]] },
 ];
 
 export default function Footer() {

@@ -50,7 +50,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         </div>
 
         <p className="mt-6 text-xs leading-relaxed text-muted">
-          We only read your name, email and profile photo from Google. By continuing you agree to our terms and privacy policy.
+          We only read your name, email and profile photo from Google. By continuing you agree to our{" "}
+          <Link href="/terms" className="underline">terms</Link> and <Link href="/privacy" className="underline">privacy policy</Link>.
         </p>
       </div>
     </main>
