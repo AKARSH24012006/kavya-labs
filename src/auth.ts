@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import PostgresAdapter from "@auth/pg-adapter";
@@ -10,7 +11,16 @@ const adminEmails = (process.env.ADMIN_EMAILS ?? "")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
 
+/**
+ * AUTH_SECRET signs session cookies. If it isn't set, derive a stable one from DATABASE_URL
+ * (already a server-only secret) so a fresh deploy works; setting AUTH_SECRET explicitly is preferred.
+ */
+const secret =
+  process.env.AUTH_SECRET ??
+  (process.env.DATABASE_URL ? createHash("sha256").update("kavya-auth:" + process.env.DATABASE_URL).digest("base64") : undefined);
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret,
   adapter: PostgresAdapter(pool),
   providers: [Google],
   // Database sessions: suspending or deleting a user takes effect on their very next request.
